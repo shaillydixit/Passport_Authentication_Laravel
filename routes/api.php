@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\Api\AuthorController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,4 +17,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::post('register', [AuthorController::class, 'register']);
+Route::post('login', [AuthorController::class, 'login']);
+
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('profile', [AuthorController::class, 'profile']);
+    Route::get('logout', [AuthorController::class, 'logout']);
+
+    Route::post('create-book', [BookController::class, 'createBook']);
+    Route::get('list-books', [BookController::class, 'listBook']);
+    Route::get('single-book/{id}', [BookController::class, 'singleBook']);
+    Route::post('update-book/{id}', [BookController::class, 'updateBook']);
+    Route::get('delete-book/{id}', [BookController::class, 'deleteBook']);
 });
