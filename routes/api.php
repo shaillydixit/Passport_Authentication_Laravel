@@ -21,13 +21,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('register', [AuthorController::class, 'register']);
 Route::post('login', [AuthorController::class, 'login']);
+Route::get('list-books', [BookController::class, 'listBook']);
 
+//for these route we have to pass the accesstokens
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('profile', [AuthorController::class, 'profile']);
-    Route::get('logout', [AuthorController::class, 'logout']);
+    Route::post('logout', [AuthorController::class, 'logout']);
 
     Route::post('create-book', [BookController::class, 'createBook']);
-    Route::get('list-books', [BookController::class, 'listBook']);
+    Route::get('author-books', [BookController::class, 'authorBook']);
     Route::get('single-book/{id}', [BookController::class, 'singleBook']);
     Route::post('update-book/{id}', [BookController::class, 'updateBook']);
     Route::get('delete-book/{id}', [BookController::class, 'deleteBook']);
