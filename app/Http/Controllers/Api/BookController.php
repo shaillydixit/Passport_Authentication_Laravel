@@ -85,10 +85,54 @@ class BookController extends Controller
     //Update Method - Api
     public function updateBook(Request $request, $book_id)
     {
+        $author_id = auth()->user()->id;
+
+        if (Book::where([
+            'author_id' => $author_id,
+            'id' => $book_id
+        ])->exists()) {
+            $book = Book::find($book_id);
+
+            $book->title = isset($request->title) ? $request->title : $book->title;
+            $book->description = isset($request->description) ? $request->description : $book->description;
+            $book->book_cost = isset($request->book_cost) ? $request->book_cost : $book->book_cost;
+
+            $book->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Book data has been updated',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Book does not exist',
+            ]);
+        }
     }
 
     //Delete Method - Api
     public function deleteBook($book_id)
     {
+        $author_id = auth()->user()->id;
+
+        if (Book::where([
+            'author_id' => $author_id,
+            'id' => $book_id
+        ])->exists()) {
+
+            $book = Book::find($book_id);
+            $book->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Book deleted Successfully',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Book does not exist',
+            ]);
+        }
     }
 }
